@@ -110,7 +110,9 @@ def extract_features_labels(images_dir, labels_filename):
     target_size = None
     labels_file = open(os.path.join(basedir, labels_filename), 'r')
     lines = labels_file.readlines()
-    gender_labels = {line.split('\t')[1] : int(line.split('\t')[2]) for line in lines[1:]}
+    print(lines[1].split('\t')[3])
+    gender_labels = {line.split('\t')[1] : int(line.split('\t')[3]) for line in lines[1:] }
+    
     if os.path.isdir(images_dir):
         all_features = []
         all_labels = []
@@ -132,4 +134,3 @@ def extract_features_labels(images_dir, labels_filename):
     landmark_features = np.array(all_features)
     gender_labels = (np.array(all_labels) + 1)/2 # simply converts the -1 into 0, so male=0 and female=1
     return landmark_features, gender_labels
-

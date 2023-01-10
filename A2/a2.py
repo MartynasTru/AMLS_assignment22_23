@@ -12,7 +12,7 @@ import dlib
 from landmarks import extract_features_labels, get_data
 from output import logging
 from keras.preprocessing import image
-from sklearn.model_selection import GridSearchCV
+
 
 global start_time 
 basedir = 'Datasets/'
@@ -21,17 +21,16 @@ labels_filename = 'celeba/labels.csv'
 
 
 start_time = time.time()
-features_extracted = True
+features_extracted = False
 
 #defining parameter range
 def grid_fitting(X_train, y_train):
 
     param_grid = {'C': [0.01, 0.1, 1, 10], 
                 'gamma': [10, 1, 0.1, 0.01],
-                'kernel': ['poly', 'linear' ]} 
+                'kernel': ['rbf', 'linear']} 
 
-                
-    grid = GridSearchCV(SVC(), param_grid, scoring = "accuracy", refit = True, verbose = 3, cv = 5)
+    grid = GridSearchCV(SVC(), param_grid,  refit = True, verbose = 3, cv = 5)
     grid.fit(X_train, y_train)
 
 
@@ -39,6 +38,7 @@ def grid_fitting(X_train, y_train):
     for mean_score, params in zip(results["mean_test_score"], results["params"]):
         print(f"mean_score: {mean_score:.3f}, params: {params}")
     return grid
+
 
 
 def img_SVM(training_images, training_labels, test_images, test_labels):
@@ -61,6 +61,7 @@ def img_SVM(training_images, training_labels, test_images, test_labels):
 
     end_time = time.time()
     total_runtime = end_time - start_time
+    
     logging(total_runtime, model, report, best_parameter, best_model)
     
     
@@ -71,12 +72,12 @@ if(features_extracted == False):
     print("Shape tr_Y:" ,np.shape(tr_Y))
     print("Shape te_X:" ,np.shape(te_X))
     print("Shape te_Y:" ,np.shape(te_Y))
-    np.savez('A1/extracted_features', tr_X=tr_X, tr_Y=tr_Y, te_X=te_X, te_Y=te_Y)
+    np.savez('A2/extracted_features', tr_X=tr_X, tr_Y=tr_Y, te_X=te_X, te_Y=te_Y)
     pred=img_SVM(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
 
 else:
 
-    loaded_data = np.load('A1/extracted_features.npz')
+    loaded_data = np.load('A2/extracted_features.npz')
     tr_X = loaded_data['tr_X']
     tr_Y = loaded_data['tr_Y']
     te_X = loaded_data['te_X']
@@ -103,6 +104,7 @@ else:
     pred=img_SVM(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
 
 
+#tunning model
 
 
 

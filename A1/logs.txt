@@ -1,0 +1,182 @@
+Runtime:  1.117441177368164
+Used Classifier:  SVC
+Accuracy:  88.65192206424433
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.86      0.91      0.89      1834
+         1.0       0.91      0.86      0.89      1964
+
+    accuracy                           0.89      3798
+   macro avg       0.89      0.89      0.89      3798
+weighted avg       0.89      0.89      0.89      3798
+
+Runtime:  1.1201035976409912
+Used Classifier:  SVC
+Accuracy:  88.65192206424433
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.86      0.91      0.89      1834
+         1.0       0.91      0.86      0.89      1964
+
+    accuracy                           0.89      3798
+   macro avg       0.89      0.89      0.89      3798
+weighted avg       0.89      0.89      0.89      3798
+
+Runtime:  1.1916382312774658
+Used Classifier:  SVC
+Accuracy:  50.1
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.57      0.58      0.58       583
+         1.0       0.40      0.38      0.39       417
+
+    accuracy                           0.50      1000
+   macro avg       0.48      0.48      0.48      1000
+weighted avg       0.50      0.50      0.50      1000
+
+Runtime:  1.1110272407531738
+Used Classifier:  SVC
+Accuracy:  88.65192206424433
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.86      0.91      0.89      1834
+         1.0       0.91      0.86      0.89      1964
+
+    accuracy                           0.89      3798
+   macro avg       0.89      0.89      0.89      3798
+weighted avg       0.89      0.89      0.89      3798
+
+Runtime:  1.0595650672912598
+Used Classifier:  SVC
+Accuracy:  89.9
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.91      0.91      0.91       583
+         1.0       0.88      0.88      0.88       417
+
+    accuracy                           0.90      1000
+   macro avg       0.90      0.90      0.90      1000
+weighted avg       0.90      0.90      0.90      1000
+
+Runtime:  1.2296812534332275
+Used Classifier:  SVC
+Accuracy:  89.9
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.91      0.91      0.91       583
+         1.0       0.88      0.88      0.88       417
+
+    accuracy                           0.90      1000
+   macro avg       0.90      0.90      0.90      1000
+weighted avg       0.90      0.90      0.90      1000
+
+Runtime:  101.39198470115662
+Used Classifier:  SVC
+Accuracy:  89.9
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.91      0.91      0.91       583
+         1.0       0.88      0.88      0.88       417
+
+    accuracy                           0.90      1000
+   macro avg       0.90      0.90      0.90      1000
+weighted avg       0.90      0.90      0.90      1000
+
+Runtime:  99.81155276298523
+Used Classifier:  SVC
+Accuracy:  89.9
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.91      0.91      0.91       583
+         1.0       0.88      0.88      0.88       417
+
+    accuracy                           0.90      1000
+   macro avg       0.90      0.90      0.90      1000
+weighted avg       0.90      0.90      0.90      1000
+
+Runtime:  118.88206839561462
+Used Classifier:  SVC
+Accuracy:  93.8388625592417
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.93      0.94      0.94      1834
+         1.0       0.94      0.94      0.94      1964
+
+    accuracy                           0.94      3798
+   macro avg       0.94      0.94      0.94      3798
+weighted avg       0.94      0.94      0.94      3798
+
+Runtime:  138.1052668094635
+Used Classifier:  SVC
+Accuracy:  92.47422680412372
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.91      0.95      0.93       489
+         1.0       0.95      0.90      0.92       481
+
+    accuracy                           0.92       970
+   macro avg       0.93      0.92      0.92       970
+weighted avg       0.93      0.92      0.92       970
+
+Runtime:  1.3458795547485352
+Used Classifier:  SVC
+Accuracy:  87.31958762886597
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.85      0.91      0.88       489
+         1.0       0.90      0.83      0.87       481
+
+    accuracy                           0.87       970
+   macro avg       0.88      0.87      0.87       970
+weighted avg       0.88      0.87      0.87       970
+
+Runtime:  139.45362997055054
+Used Classifier:  SVC
+Accuracy:  92.47422680412372
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.91      0.95      0.93       489
+         1.0       0.95      0.90      0.92       481
+
+    accuracy                           0.92       970
+   macro avg       0.93      0.92      0.92       970
+weighted avg       0.93      0.92      0.92       970
+
+Runtime:  1.3343963623046875
+Used Classifier:  SVC
+Accuracy:  87.31958762886597
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.85      0.91      0.88       489
+         1.0       0.90      0.83      0.87       481
+
+    accuracy                           0.87       970
+   macro avg       0.88      0.87      0.87       970
+weighted avg       0.88      0.87      0.87       970
+
+Runtime:  2848.292056083679
+Used Classifier:  SVC
+Accuracy:  92.47422680412372
+Classifier_report:                precision    recall  f1-score   support
+
+         0.0       0.91      0.95      0.93       489
+         1.0       0.95      0.90      0.92       481
+
+    accuracy                           0.92       970
+   macro avg       0.93      0.92      0.92       970
+weighted avg       0.93      0.92      0.92       970
+
+Runtime:  137.6012167930603
+Used Classifier:  SVC
+Best parameters:  {'C': 0.01, 'gamma': 1, 'kernel': 'rbf'}
+best models performance (accuracy):  0.5041237113402062
+Report:  {'mean_fit_time': array([1.30491238]), 'std_fit_time': array([0.02858846]), 'mean_score_time': array([0.59062014]), 'std_score_time': array([0.00921408]), 'param_C': masked_array(data=[0.01],
+             mask=[False],
+       fill_value='?',
+            dtype=object), 'param_gamma': masked_array(data=[1],
+             mask=[False],
+       fill_value='?',
+            dtype=object), 'param_kernel': masked_array(data=['rbf'],
+             mask=[False],
+       fill_value='?',
+            dtype=object), 'params': [{'C': 0.01, 'gamma': 1, 'kernel': 'rbf'}], 'split0_test_score': array([0.50625]), 'split1_test_score': array([0.50625]), 'split2_test_score': array([0.50520833]), 'split3_test_score': array([0.50573514]), 'split4_test_score': array([0.50573514]), 'mean_test_score': array([0.50583572]), 'std_test_score': array([0.00038913]), 'rank_test_score': array([1])}

@@ -8,8 +8,8 @@ import tensorflow as tf
 # PATH TO ALL IMAGES
 global basedir, image_paths, target_size, images_dir
 basedir = 'Datasets/'
-images_dir = os.path.join(basedir,'celeba/img/')
-labels_filename = 'celeba/labels.csv'
+images_dir = os.path.join(basedir,'cartoon_set/img/')
+labels_filename = 'cartoon_set/labels.csv'
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
@@ -28,20 +28,20 @@ def shape_to_np(shape, dtype="int"):
     return coords
 
 def get_data():
-    images_dir = os.path.join(basedir,'celeba/img/')
-    labels_filename = 'celeba/labels.csv'
+    images_dir = os.path.join(basedir,'cartoon_set/img/')
+    labels_filename = 'cartoon_set/labels.csv'
     X, y = extract_features_labels(images_dir, labels_filename)
     Y = np.array([y, -(y - 1)]).T
-    tr_X = X[:5000]
-    tr_Y = Y[:5000]
+    tr_X = X[:10000]
+    tr_Y = Y[:10000]
 
     
-    images_dir = os.path.join(basedir,'celeba_test/img/')
-    labels_filename = 'celeba_test/labels.csv'
+    images_dir = os.path.join(basedir,'cartoon_set_test/img/')
+    labels_filename = 'cartoon_set_test/labels.csv'
     X, y = extract_features_labels(images_dir, labels_filename)
     Y = np.array([y, -(y - 1)]).T
-    te_X = X[:1000]
-    te_Y = Y[:1000]
+    te_X = X[:2000]
+    te_Y = Y[:2000]
 
     return tr_X, tr_Y, te_X, te_Y
 
@@ -76,13 +76,14 @@ def run_dlib_shape(image):
 
     face_areas = np.zeros((1, num_faces))
     face_shapes = np.zeros((136, num_faces), dtype=np.int64)
-
+    JAWLINE_POINTS = list(range(0, 17)) 
     # loop over the face detections
     for (i, rect) in enumerate(rects):
         # determine the facial landmarks for the face region, then
         # convert the facial landmark (x, y)-coordinates to a NumPy
         # array
         temp_shape = predictor(gray, rect)
+        
         temp_shape = shape_to_np(temp_shape)
 
         # convert dlib's rectangle to a OpenCV-style bounding box
@@ -110,16 +111,18 @@ def extract_features_labels(images_dir, labels_filename):
     target_size = None
     labels_file = open(os.path.join(basedir, labels_filename), 'r')
     lines = labels_file.readlines()
-    print(lines)
-    print(lines[1].split('\t')[3])
-    gender_labels = {line.split('\t')[1] : int(line.split('\t')[3]) for line in lines[1:] }
-    print("gender", gender_labels)
+    # print(lines)
+    #print(lines[1].split('\t')[3])
+    
+    
+    face_labels = {line.split('\t')[0] : int(line.split('\t')[2]) for line in lines[1:] }
+    
     if os.path.isdir(images_dir):
         all_features = []
         all_labels = []
         
         for img_path in image_paths:
-            file_name= img_path.split('/')[-1].split('\\')[-1]
+            file_name= img_path.split('/')[-1].split('.')[-2]
 
             # load image
             img = image.img_to_array(
@@ -129,9 +132,11 @@ def extract_features_labels(images_dir, labels_filename):
             features, _ = run_dlib_shape(img)
             if features is not None:
                 all_features.append(features)
-                all_labels.append(gender_labels[file_name])
+                
+                all_labels.append(face_labels[file_name])
+                print(file_name)
 
     
     landmark_features = np.array(all_features)
-    gender_labels = (np.array(all_labels) + 1)/2 # simply converts the -1 into 0, so male=0 and female=1
-    return landmark_features, gender_labels
+    face_labels = (np.array(all_labels)) # simply converts the -1 into 0, so male=0 and female=1
+    return landmark_features, face_labels

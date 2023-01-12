@@ -26,11 +26,11 @@ features_extracted = True
 #defining parameter range
 def grid_fitting_svm(X_train, y_train):
 
-    param_grid = {'C': [0.01, 0.1, 1], 
+    param_grid = {'C': [0.01, 0.1], 
                 'gamma': [1, 0.1],
                 'kernel': ['linear']} 
 
-    grid = GridSearchCV(SVC(), param_grid,  refit = True, verbose = 3, cv = 5)
+    grid = GridSearchCV(SVC(), param_grid,  refit = True, cv=5)
     grid.fit(X_train, y_train)
 
 
@@ -167,12 +167,12 @@ if(features_extracted == False):
     print("Shape tr_Y:" ,np.shape(tr_Y))
     print("Shape te_X:" ,np.shape(te_X))
     print("Shape te_Y:" ,np.shape(te_Y))
-    np.savez('B1/extracted_features', tr_X=tr_X, tr_Y=tr_Y, te_X=te_X, te_Y=te_Y)
-    pred=img_SVM(tr_X.reshape((np.shape(tr_X)[0], 17*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 17*2)), list(zip(*te_Y))[0])
+    np.savez('B2/extracted_features', tr_X=tr_X, tr_Y=tr_Y, te_X=te_X, te_Y=te_Y)
+    pred=img_SVM(tr_X.reshape((np.shape(tr_X)[0], 12*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 12*2)), list(zip(*te_Y))[0])
 
 else:
 
-    loaded_data = np.load('B1/extracted_features.npz')
+    loaded_data = np.load('B2/extracted_features.npz')
     tr_X = loaded_data['tr_X']
     tr_Y = loaded_data['tr_Y']
     te_X = loaded_data['te_X']
@@ -183,11 +183,10 @@ else:
     print("Shape te_X:" ,np.shape(te_X))
     print("Shape te_Y:" ,np.shape(te_Y))
 
-
     #model_test(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
     #pred=img_SVM(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
-    pred=img_KNN(tr_X.reshape((np.shape(tr_X)[0], 17*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 17*2)), list(zip(*te_Y))[0])
-    pred=img_FOREST(tr_X.reshape((np.shape(tr_X)[0], 17*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 17*2)), list(zip(*te_Y))[0])
+    #pred=img_KNN(tr_X.reshape((np.shape(tr_X)[0], 12*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 12*2)), list(zip(*te_Y))[0])
+    pred=img_FOREST(tr_X.reshape((np.shape(tr_X)[0], 12*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 12*2)), list(zip(*te_Y))[0])
 
 
 

@@ -36,8 +36,8 @@ def get_data():
     tr_Y = Y[:10000]
 
     
-    images_dir = os.path.join(basedir,'cartoon_set/img/')
-    labels_filename = 'cartoon_set/labels.csv'
+    images_dir = os.path.join(basedir,'cartoon_set_test/img/')
+    labels_filename = 'cartoon_set_test/labels.csv'
     X, y = extract_features_labels(images_dir, labels_filename)
     Y = np.array([y, -(y - 1)]).T
     te_X = X[:2000]
@@ -59,38 +59,38 @@ def rect_to_bb(rect):
     return (x, y, w, h)
 
 
-
 def run_dlib_shape(image):
     # in this function we load the image, detect the landmarks of the face, and then return the image and the landmarks
-    # load the input image, resize it, and convert it to grayscale
+    
     resized_image = image.astype('uint8')
 
-    gray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-    gray = gray.astype('uint8')
+    img = resized_image[:, :, :3]
 
     # detect faces in the grayscale image
-    rects = detector(gray, 1)
+    rects = detector(img, 1)
     num_faces = len(rects)
 
     if num_faces == 0:
-        return None, resized_image
+        return None, image
 
-    jawline_points = []
+    eye_points = []
     # loop over the face detections
     for (i, rect) in enumerate(rects):
         # determine the facial landmarks for the face region, then
         # convert the facial landmark (x, y)-coordinates to a NumPy
         # array
-        temp_shape = predictor(gray, rect)
+        temp_shape = predictor(resized_image, rect)
         
         temp_shape = shape_to_np(temp_shape)
 
-        # extract the jawline points from the landmark points
-        jawline = temp_shape[0:17]
-        jawline_points.append(jawline)
-        
-    dlibout = np.array(jawline_points).reshape(17, 2)
-    return dlibout, resized_image
+        # extract the left and right eye points from the landmark points
+        left_eye = temp_shape[36:42]
+        right_eye = temp_shape[42:48]
+        eye_points.extend(left_eye)
+        eye_points.extend(right_eye)
+
+    eye_points = np.array(eye_points).reshape(-1, 2)
+    return eye_points, resized_image
 
 def extract_features_labels(images_dir, labels_filename):
     """
@@ -110,7 +110,7 @@ def extract_features_labels(images_dir, labels_filename):
     #print(lines[1].split('\t')[3])
     
     
-    face_labels = {line.split('\t')[0] : int(line.split('\t')[2]) for line in lines[1:] }
+    face_labels = {line.split('\t')[0] : int(line.split('\t')[1]) for line in lines[1:] }
     
     if os.path.isdir(images_dir):
         all_features = []

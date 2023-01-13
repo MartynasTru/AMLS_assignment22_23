@@ -10,6 +10,8 @@ def plot_grid_search(cv_results, model, conf_matrix):
 
     model_name = model
     if model_name == "SVM":
+
+        #Parameter C performance
         scores_mean = cv_results["mean_test_score"] * 100
         param_C = [result["C"] for result in cv_results["params"]]
         plt.rcParams["figure.figsize"] = [15, 10]
@@ -21,6 +23,7 @@ def plot_grid_search(cv_results, model, conf_matrix):
         plt.title("SVM model. Linear kernel. C performance", fontsize=32)
         plt.savefig("B2/graphs/SVC model C performance, linear.png")
 
+        # Parameter Gamma performance        
         scores_mean = cv_results["mean_test_score"] * 100
         param_gamma = [result["gamma"] for result in cv_results["params"]]
         plt.rcParams["figure.figsize"] = [15, 10]
@@ -32,6 +35,7 @@ def plot_grid_search(cv_results, model, conf_matrix):
         plt.title("SVM model. Linear kernel. Gamma performance", fontsize=32)
         plt.savefig("B2/graphs/SVC model gamma performance.png")
 
+        # Confusion matrix heatmap
         sns.heatmap(
             conf_matrix,
             annot=True,
@@ -44,9 +48,10 @@ def plot_grid_search(cv_results, model, conf_matrix):
         plt.ylabel("True Label")
         plt.title("SVM model confusion matrix", fontsize=32)
         plt.savefig("B2/graphs/SVM confusion matrix.png")
-        plt.show()
 
     elif model_name == "KNN":
+
+        # Parameter n_neighbors performance
         scores_mean = cv_results["mean_test_score"] * 100
         param_n = [result["n_neighbors"] for result in cv_results["params"]]
         plt.rcParams["figure.figsize"] = [15, 10]
@@ -58,6 +63,7 @@ def plot_grid_search(cv_results, model, conf_matrix):
         plt.title("KNN Regressiom model. N performance", fontsize=32)
         plt.savefig("B2/graphs/KNN model N performance.png")
 
+        # Confusion matrix heatmap
         sns.heatmap(
             conf_matrix,
             annot=True,
@@ -73,6 +79,8 @@ def plot_grid_search(cv_results, model, conf_matrix):
         plt.show()
 
     elif model_name == "RFC":
+
+        # Parameter n_estimators performance
         scores_mean = cv_results["mean_test_score"] * 100
         param_n = [result["n_estimators"] for result in cv_results["params"]]
         plt.rcParams["figure.figsize"] = [15, 10]
@@ -84,6 +92,7 @@ def plot_grid_search(cv_results, model, conf_matrix):
         plt.title("Random Forest model. N_estimators performance", fontsize=32)
         plt.savefig("B2/graphs/RF model N_estimators performance.png")
 
+        # Confusion matrix heatmap
         sns.heatmap(
             conf_matrix,
             annot=True,
@@ -98,27 +107,11 @@ def plot_grid_search(cv_results, model, conf_matrix):
         plt.savefig("B2/graphs/RFC confusion matrix.png")
         plt.show()
 
-    # scores_sd = np.array(scores_sd).reshape(len(grid_param_2),len(grid_param_1))
-
-    # # Plot Grid search scores
-
-    # _, ax = plt.subplots(1,1)
-
-    # # Param1 is the X-axis, Param 2 is represented as a different curve (color line)
-
-    # for idx, val in enumerate(grid_param_2):
-
-    #     ax.plot(grid_param_1, scores_mean[idx,:], '-o', label= name_param_2 + ': ' + str(val))
-
-    # ax.set_title("Grid Search Scores", fontsize=20, fontweight='bold')
-
-    # ax.set_xlabel(name_param_1, fontsize=16)
-
-    # ax.set_ylabel('CV Average Score', fontsize=16)
-
-    # ax.legend(loc="best", fontsize=15)
-
-    # ax.grid('on')
-
-
-# plot_grid_search(pipe_grid.cv_results_, n_estimators, max_features, 'N Estimators', 'Max Features')
+        # Learning curve plot
+        plt.plot(train_sizes, train_scores.mean(axis=1), label="Training Score")
+        plt.plot(train_sizes, val_scores.mean(axis=1), label="Validation Score")
+        plt.xlabel("Number of Training Examples")
+        plt.ylabel("Score")
+        plt.legend()
+        plt.title("Random Forest learning curve", fontsize=20)
+        plt.savefig("B2/graphs/KNN learningcurve.png")

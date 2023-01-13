@@ -60,7 +60,7 @@ def rect_to_bb(rect):
 
 
 def run_dlib_shape(image):
-    # in this function we load the image, detect the landmarks of the face, and then return the image and the landmarks
+    # load the image, detect the landmarks of the face, and then return the image and the landmarks
     # load the input image, resize it, and convert it to grayscale
     resized_image = image.astype("uint8")
 
@@ -133,7 +133,5 @@ def extract_features_labels(images_dir, labels_filename):
                 all_labels.append(gender_labels[file_name])
 
     landmark_features = np.array(all_features)
-    gender_labels = (
-        np.array(all_labels) + 1
-    ) / 2  # simply converts the -1 into 0, so male=0 and female=1
+    gender_labels = (np.array(all_labels) + 1) / 2  # simply converts the -1 into 0, so male=0 and female=1
     return landmark_features, gender_labels

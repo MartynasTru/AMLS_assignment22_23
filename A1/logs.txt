@@ -2508,3 +2508,12 @@ Report:  {'mean_fit_time': array([  0.42513876,   0.41829772,   0.44442463,   1.
    macro avg       0.92      0.92      0.92       970
 weighted avg       0.92      0.92      0.92       970
 
+              precision    recall  f1-score   support
+
+         0.0       0.91      0.94      0.92       489
+         1.0       0.94      0.90      0.92       481
+
+    accuracy                           0.92       970
+   macro avg       0.92      0.92      0.92       970
+weighted avg       0.92      0.92      0.92       970
+

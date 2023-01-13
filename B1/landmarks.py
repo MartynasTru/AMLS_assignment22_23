@@ -3,7 +3,6 @@ import numpy as np
 from keras_preprocessing import image
 import cv2
 import dlib
-import tensorflow as tf
 
 # PATH TO ALL IMAGES
 global basedir, image_paths, target_size, images_dir
@@ -132,7 +131,5 @@ def extract_features_labels(images_dir, labels_filename):
                 print(file_name)
 
     landmark_features = np.array(all_features)
-    face_labels = np.array(
-        all_labels
-    )  # simply converts the -1 into 0, so male=0 and female=1
+    face_labels = np.array(all_labels)  # simply converts the -1 into 0, so male=0 and female=1
     return landmark_features, face_labels

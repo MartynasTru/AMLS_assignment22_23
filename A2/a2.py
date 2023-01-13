@@ -16,60 +16,63 @@ from keras.preprocessing import image
 from graph_drawing import plot_grid_search
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import learning_curve
+import matplotlib.pyplot as plt
 
 
-
-global start_time 
-
+global start_time
 
 
 start_time = time.time()
 features_extracted = True
 
-#defining parameter range
+# defining parameter range
 def grid_fitting_svm(X_train, y_train):
 
-    param_grid = {'C': [0.01, 0.1, 1, 10], 
-                'gamma': [1, 0.1, 0.01],
-                'kernel': ['linear']} 
+    param_grid = {
+        "C": [0.01, 0.1, 1, 10],
+        "gamma": [1, 0.1, 0.01],
+        "kernel": ["linear"],
+    }
 
-    grid = GridSearchCV(SVC(), param_grid,  refit = True, verbose = 3, cv = 5)
+    grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=3, cv=5)
     grid.fit(X_train, y_train)
-
 
     results = grid.cv_results_
     for mean_score, params in zip(results["mean_test_score"], results["params"]):
         print(f"mean_score: {mean_score:.3f}, params: {params}")
     return grid, param_grid
+
 
 def grid_fitting_knn(X_train, y_train):
 
     k_range = list(range(1, 300))
     param_grid = dict(n_neighbors=k_range)
-    grid = GridSearchCV(KNeighborsClassifier(), param_grid,  cv = 5, verbose = 3)
+    grid = GridSearchCV(KNeighborsClassifier(), param_grid, cv=5, verbose=3)
     grid.fit(X_train, y_train)
-
 
     results = grid.cv_results_
     for mean_score, params in zip(results["mean_test_score"], results["params"]):
         print(f"mean_score: {mean_score:.3f}, params: {params}")
     return grid, param_grid
+
 
 def grid_fitting_forest(X_train, y_train):
 
     k_range = list(range(10, 600))
     param_grid = dict(n_estimators=k_range)
-    grid = GridSearchCV(RandomForestClassifier(), param_grid,  cv = 3, verbose = 3)
+    grid = GridSearchCV(RandomForestClassifier(), param_grid, cv=3, verbose=3)
     grid.fit(X_train, y_train)
-
 
     results = grid.cv_results_
     for mean_score, params in zip(results["mean_test_score"], results["params"]):
         print(f"mean_score: {mean_score:.3f}, params: {params}")
     return grid, param_grid
 
+
 def model_test(training_images, training_labels, test_images, test_labels):
-    model = svm.SVC(C = 0.01, gamma=1, kernel='linear')
+    model = KNeighborsClassifier(n_neighbors=51)
     model.fit(training_images, training_labels)
     y_pred = model.predict(test_images)
     class_rep = classification_report(test_labels, y_pred)
@@ -81,7 +84,7 @@ def img_SVM(training_images, training_labels, test_images, test_labels):
 
     grid, param_grid = grid_fitting_svm(training_images, training_labels)
 
-    print ("best parameter after tuning")
+    print("best parameter after tuning")
     print(grid.best_params_)
     best_parameter = grid.best_params_
     print("test_score with best model:")
@@ -90,7 +93,7 @@ def img_SVM(training_images, training_labels, test_images, test_labels):
     best_est = grid.best_estimator_
     best_model = best_est.score(test_images, test_labels)
     print("best-model", best_model)
-    print ("Results")
+    print("Results")
     print(grid.cv_results_)
     report = grid.cv_results_
     print("More results:\n")
@@ -98,20 +101,20 @@ def img_SVM(training_images, training_labels, test_images, test_labels):
     for mean_score, params in zip(results["mean_test_score"], results["params"]):
         print(f"mean_score: {mean_score:.3f}, params: {params}")
 
-    
     end_time = time.time()
     total_runtime = end_time - start_time
 
-    #graph(scores, param_grid)
+    # graph(scores, param_grid)
     plot_grid_search(grid.cv_results_, param_grid)
     logging(total_runtime, model, report, best_parameter, best_model)
-    
+
+
 def img_KNN(training_images, training_labels, test_images, test_labels):
     model = "KNN"
 
     grid, param_grid = grid_fitting_knn(training_images, training_labels)
 
-    print ("best parameter after tuning")
+    print("best parameter after tuning")
     print(grid.best_params_)
     best_parameter = grid.best_params_
     print("test_score with best model:")
@@ -120,7 +123,7 @@ def img_KNN(training_images, training_labels, test_images, test_labels):
     best_est = grid.best_estimator_
     best_model = best_est.score(test_images, test_labels)
     print("best-model", best_model)
-    print ("Results")
+    print("Results")
     print(grid.cv_results_)
     report = grid.cv_results_
     print("More results:\n")
@@ -131,16 +134,30 @@ def img_KNN(training_images, training_labels, test_images, test_labels):
     end_time = time.time()
     total_runtime = end_time - start_time
 
-    #graph(scores, param_grid)
-    plot_grid_search(grid.cv_results_, param_grid)
-    logging(total_runtime, model, report, best_parameter, best_model)    
+    y_pred = grid.predict(test_images)
+    conf_matrix = confusion_matrix(test_labels, y_pred)
+    # graph(scores, param_grid)
+    train_sizes, train_scores, val_scores = learning_curve(
+        grid.best_estimator_, training_images, training_labels, cv=5
+    )
+    plt.plot(train_sizes, train_scores.mean(axis=1), label="Training Score")
+    plt.plot(train_sizes, val_scores.mean(axis=1), label="Validation Score")
+    plt.xlabel("Number of Training Examples")
+    plt.ylabel("Score")
+    plt.legend()
+    plt.title("KNN learning curve", fontsize=32)
+    plt.savefig("A2/graphs/A2 KNN learningcurve.png")
+
+    # plot_grid_search(grid.cv_results_, param_grid, conf_matrix)
+    logging(total_runtime, model, report, best_parameter, best_model)
+
 
 def img_FOREST(training_images, training_labels, test_images, test_labels):
     model = "Random Forest Classifier"
 
     grid, param_grid = grid_fitting_forest(training_images, training_labels)
 
-    print ("best parameter after tuning")
+    print("best parameter after tuning")
     print(grid.best_params_)
     best_parameter = grid.best_params_
     print("test_score with best model:")
@@ -149,7 +166,7 @@ def img_FOREST(training_images, training_labels, test_images, test_labels):
     best_est = grid.best_estimator_
     best_model = best_est.score(test_images, test_labels)
     print("best-model", best_model)
-    print ("Results")
+    print("Results")
     print(grid.cv_results_)
     report = grid.cv_results_
     print("More results:\n")
@@ -160,47 +177,49 @@ def img_FOREST(training_images, training_labels, test_images, test_labels):
     end_time = time.time()
     total_runtime = end_time - start_time
 
-    #graph(scores, param_grid)
+    # graph(scores, param_grid)
     plot_grid_search(grid.cv_results_, param_grid)
     logging(total_runtime, model, report, best_parameter, best_model)
 
-if(features_extracted == False):
+
+if features_extracted == False:
     tr_X, tr_Y, te_X, te_Y = get_data()
-    print("Shape tr_X:" ,np.shape(tr_X))
-    print("Shape tr_Y:" ,np.shape(tr_Y))
-    print("Shape te_X:" ,np.shape(te_X))
-    print("Shape te_Y:" ,np.shape(te_Y))
-    np.savez('A2/extracted_features', tr_X=tr_X, tr_Y=tr_Y, te_X=te_X, te_Y=te_Y)
-    pred=img_SVM(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
+    print("Shape tr_X:", np.shape(tr_X))
+    print("Shape tr_Y:", np.shape(tr_Y))
+    print("Shape te_X:", np.shape(te_X))
+    print("Shape te_Y:", np.shape(te_Y))
+    np.savez("A2/extracted_features", tr_X=tr_X, tr_Y=tr_Y, te_X=te_X, te_Y=te_Y)
+    pred = img_SVM(
+        tr_X.reshape((np.shape(tr_X)[0], 68 * 2)),
+        list(zip(*tr_Y))[0],
+        te_X.reshape((np.shape(te_X)[0], 68 * 2)),
+        list(zip(*te_Y))[0],
+    )
 
 else:
 
-    loaded_data = np.load('A2/extracted_features.npz')
-    tr_X = loaded_data['tr_X']
-    tr_Y = loaded_data['tr_Y']
-    te_X = loaded_data['te_X']
-    te_Y = loaded_data['te_Y']
+    loaded_data = np.load("A2/extracted_features.npz")
+    tr_X = loaded_data["tr_X"]
+    tr_Y = loaded_data["tr_Y"]
+    te_X = loaded_data["te_X"]
+    te_Y = loaded_data["te_Y"]
 
-    print("Shape tr_X:" ,np.shape(tr_X))
-    print("Shape tr_Y:" ,np.shape(tr_Y))
-    print("Shape te_X:" ,np.shape(te_X))
-    print("Shape te_Y:" ,np.shape(te_Y))
-    print("1 tr_X:" , tr_X[1])
-    print("2 tr_Y:" , tr_Y[2])
-    print("3 te_X:" , te_X[3])
-    print("4 te_Y:" , te_Y[4])
+    print("Shape tr_X:", np.shape(tr_X))
+    print("Shape tr_Y:", np.shape(tr_Y))
+    print("Shape te_X:", np.shape(te_X))
+    print("Shape te_Y:", np.shape(te_Y))
+    print("1 tr_X:", tr_X[1])
+    print("2 tr_Y:", tr_Y[2])
+    print("3 te_X:", te_X[3])
+    print("4 te_Y:", te_Y[4])
 
-    #model_test(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
-    #pred=img_SVM(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
-    #pred=img_KNN(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
-    #pred=img_FOREST(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
-
-
-
-
-
-
-
-
-
-
+    # model_test(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
+    # pred=img_SVM(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
+    # pred = img_KNN(
+    #     tr_X.reshape((np.shape(tr_X)[0], 68 * 2)),
+    #     list(zip(*tr_Y))[0],
+    #     te_X.reshape((np.shape(te_X)[0], 68 * 2)),
+    #     list(zip(*te_Y))[0],
+    # )
+    # pred=img_FOREST(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])
+    model_test(tr_X.reshape((np.shape(tr_X)[0], 68*2)), list(zip(*tr_Y))[0], te_X.reshape((np.shape(te_X)[0], 68*2)), list(zip(*te_Y))[0])

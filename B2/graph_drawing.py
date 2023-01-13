@@ -3,61 +3,100 @@ from matplotlib import cm
 import os
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
-    
-def plot_grid_search(cv_results, model):
+
+def plot_grid_search(cv_results, model, conf_matrix):
 
     model_name = model
-    if(model_name == "SVM"):
-        scores_mean = cv_results['mean_test_score'] * 100
-        param_C = [result['C'] for result in cv_results['params']]
-        plt.rcParams['figure.figsize'] = [15, 10]
-        plt.scatter(param_C, scores_mean, label = 'Test Score vs C', s= 80, alpha=1)    
-        plt.grid(which='both', linestyle=':', linewidth=1.5)
-        plt.xlabel('Parameter C tunning', fontsize = 27)
-        plt.ylabel('Accuracy Score, %', fontsize = 27)
-        plt.tick_params(axis='both', which='major', labelsize=16.5)
-        plt.title('SVM model. Linear kernel. C performance', fontsize = 32)
-        plt.savefig('B2/graphs/SVC model C performance, linear.png')
+    if model_name == "SVM":
+        scores_mean = cv_results["mean_test_score"] * 100
+        param_C = [result["C"] for result in cv_results["params"]]
+        plt.rcParams["figure.figsize"] = [15, 10]
+        plt.scatter(param_C, scores_mean, label="Test Score vs C", s=80, alpha=1)
+        plt.grid(which="both", linestyle=":", linewidth=1.5)
+        plt.xlabel("Parameter C tunning", fontsize=27)
+        plt.ylabel("Accuracy Score, %", fontsize=27)
+        plt.tick_params(axis="both", which="major", labelsize=16.5)
+        plt.title("SVM model. Linear kernel. C performance", fontsize=32)
+        plt.savefig("B2/graphs/SVC model C performance, linear.png")
 
-        scores_mean = cv_results['mean_test_score'] * 100
-        param_gamma = [result['gamma'] for result in cv_results['params']]
-        plt.rcParams['figure.figsize'] = [15, 10]
-        plt.scatter(param_gamma, scores_mean, label = 'Test Score vs C', s= 80, alpha=1)    
-        plt.grid(which='both', linestyle=':', linewidth=1.5)
-        plt.xlabel('Parameter C tunning', fontsize = 27)
-        plt.ylabel('Accuracy Score, %', fontsize = 27)
-        plt.tick_params(axis='both', which='major', labelsize=16.5)
-        plt.title('SVM model. Linear kernel. Gamma performance', fontsize = 32)
-        plt.savefig('B2/graphs/SVC model gamma performance.png')
-    elif(model_name == "KNN"):
-        scores_mean = cv_results['mean_test_score'] * 100
-        param_n = [result['n_neighbors'] for result in cv_results['params']]
-        plt.rcParams['figure.figsize'] = [15, 10]
-        plt.scatter(param_n, scores_mean, label = 'Test Score vs n', s= 80, alpha=1)    
-        plt.grid(which='both', linestyle=':', linewidth=1.5)
-        plt.xlabel('Number of neighbours, N', fontsize = 27)
-        plt.ylabel('Accuracy Score, %', fontsize = 27)
-        plt.tick_params(axis='both', which='major', labelsize=16.5)
-        plt.title('KNN Regressiom model. N performance', fontsize = 32)
-        plt.savefig('B2/graphs/KNN model N performance.png')
+        scores_mean = cv_results["mean_test_score"] * 100
+        param_gamma = [result["gamma"] for result in cv_results["params"]]
+        plt.rcParams["figure.figsize"] = [15, 10]
+        plt.scatter(param_gamma, scores_mean, label="Test Score vs C", s=80, alpha=1)
+        plt.grid(which="both", linestyle=":", linewidth=1.5)
+        plt.xlabel("Parameter C tunning", fontsize=27)
+        plt.ylabel("Accuracy Score, %", fontsize=27)
+        plt.tick_params(axis="both", which="major", labelsize=16.5)
+        plt.title("SVM model. Linear kernel. Gamma performance", fontsize=32)
+        plt.savefig("B2/graphs/SVC model gamma performance.png")
 
-    elif(model_name == "RFC"):
-        scores_mean = cv_results['mean_test_score'] * 100
-        param_n = [result['n_estimators'] for result in cv_results['params']]
-        plt.rcParams['figure.figsize'] = [15, 10]
-        plt.scatter(param_n, scores_mean, label = 'Test Score vs n', s= 80, alpha=1)    
-        plt.grid(which='both', linestyle=':', linewidth=1.5)
-        plt.xlabel('Number of estimators, N', fontsize = 27)
-        plt.ylabel('Accuracy Score, %', fontsize = 27)
-        plt.tick_params(axis='both', which='major', labelsize=16.5)
-        plt.title('Random Forest model. N_estimators performance', fontsize = 32)
-        plt.savefig('B2/graphs/RF model N_estimators performance.png')
-    
-    
+        sns.heatmap(
+            conf_matrix,
+            annot=True,
+            cmap="Blues",
+            fmt="d",
+            annot_kws={"size": 20, "color": "red"},
+            cbar_kws={"ticks": [0, 1], "label": "My Colorbar"},
+        )
+        plt.xlabel("Predicted Label")
+        plt.ylabel("True Label")
+        plt.title("SVM model confusion matrix", fontsize=32)
+        plt.savefig("B2/graphs/SVM confusion matrix.png")
+        plt.show()
 
+    elif model_name == "KNN":
+        scores_mean = cv_results["mean_test_score"] * 100
+        param_n = [result["n_neighbors"] for result in cv_results["params"]]
+        plt.rcParams["figure.figsize"] = [15, 10]
+        plt.scatter(param_n, scores_mean, label="Test Score vs n", s=80, alpha=1)
+        plt.grid(which="both", linestyle=":", linewidth=1.5)
+        plt.xlabel("Number of neighbours, N", fontsize=27)
+        plt.ylabel("Accuracy Score, %", fontsize=27)
+        plt.tick_params(axis="both", which="major", labelsize=16.5)
+        plt.title("KNN Regressiom model. N performance", fontsize=32)
+        plt.savefig("B2/graphs/KNN model N performance.png")
 
+        sns.heatmap(
+            conf_matrix,
+            annot=True,
+            cmap="Blues",
+            fmt="d",
+            annot_kws={"size": 20, "color": "red"},
+            cbar_kws={"ticks": [0, 1], "label": "My Colorbar"},
+        )
+        plt.xlabel("Predicted Label")
+        plt.ylabel("True Label")
+        plt.title("KNN confusion matrix", fontsize=32)
+        plt.savefig("B2/graphs/KNN confusion matrix.png")
+        plt.show()
 
+    elif model_name == "RFC":
+        scores_mean = cv_results["mean_test_score"] * 100
+        param_n = [result["n_estimators"] for result in cv_results["params"]]
+        plt.rcParams["figure.figsize"] = [15, 10]
+        plt.scatter(param_n, scores_mean, label="Test Score vs n", s=80, alpha=1)
+        plt.grid(which="both", linestyle=":", linewidth=1.5)
+        plt.xlabel("Number of estimators, N", fontsize=27)
+        plt.ylabel("Accuracy Score, %", fontsize=27)
+        plt.tick_params(axis="both", which="major", labelsize=16.5)
+        plt.title("Random Forest model. N_estimators performance", fontsize=32)
+        plt.savefig("B2/graphs/RF model N_estimators performance.png")
+
+        sns.heatmap(
+            conf_matrix,
+            annot=True,
+            cmap="Blues",
+            fmt="d",
+            annot_kws={"size": 20, "color": "red"},
+            cbar_kws={"ticks": [0, 1], "label": "My Colorbar"},
+        )
+        plt.xlabel("Predicted Label")
+        plt.ylabel("True Label")
+        plt.title("Random Forest model confusion matrix", fontsize=32)
+        plt.savefig("B2/graphs/RFC confusion matrix.png")
+        plt.show()
 
     # scores_sd = np.array(scores_sd).reshape(len(grid_param_2),len(grid_param_1))
 
@@ -81,4 +120,5 @@ def plot_grid_search(cv_results, model):
 
     # ax.grid('on')
 
-#plot_grid_search(pipe_grid.cv_results_, n_estimators, max_features, 'N Estimators', 'Max Features')
+
+# plot_grid_search(pipe_grid.cv_results_, n_estimators, max_features, 'N Estimators', 'Max Features')
